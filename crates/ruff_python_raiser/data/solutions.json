@@ -1,0 +1,59 @@
+{
+    "1.py": {
+        "no_exception": []
+    },
+    "2.py": {
+        "throws_value_error": ["ValueError"]
+    },
+    "3.py": {
+        "throws_one_of_two": ["ValueError", "OverflowError"]
+    },
+    "4.py": {
+        "helper_function": ["NotImplementedError"],
+        "caller_function": ["NotImplementedError"]
+    },
+    "5.py": {
+        "might_throw": ["IndexError"],
+        "catch_exception": []
+    },
+    "6.py": {
+        "might_throw_again": ["KeyError"],
+        "outside_try_catch": ["KeyError"]
+    },
+    "7.py": {
+        "f": ["ValueError"],
+        "complex_expression": ["ValueError"]
+    },
+    "8.py": {
+        "throws_custom_exception": ["CustomException"]
+    },
+    "9.py": {
+        "built_in_exception": ["ValueError"]
+    },
+    "10.py": {
+        "input_based_exception": ["TypeError"]
+    },
+    "11.py": {
+        "loop_exception": ["Exception"]
+    },
+    "12.py": {
+        "question": ["IndexError"]
+    },
+    "13.py": {
+        "ConstructorException.__init__": ["ValueError"]
+    },
+    "14.py": {
+        "StaticMethodException.calculate_division": ["ZeroDivisionError"]
+    },
+    "15.py": {
+        "ClassMethodException.set_threshold": ["ValueError"]
+    },
+    "16.py": {
+        "MethodCalledByConstructor.__init__": ["ValueError"],
+        "MethodCalledByConstructor.validate_value": ["ValueError"]
+    },
+    "17.py": {
+        "BaseClass.do_something": ["NotImplementedError"],
+        "SubClass.do_something": ["Exception"]
+    }
+}
