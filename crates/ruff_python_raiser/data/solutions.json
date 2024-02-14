@@ -55,5 +55,17 @@
     "17.py": {
         "BaseClass.do_something": ["NotImplementedError"],
         "SubClass.do_something": ["Exception"]
+    },
+    "18.py": {
+        "f": []
+    },
+    "19.py": {
+        "f": ["ValueError"]
+    },
+    "20.py": {
+        "f": []
+    },
+    "21.py": {
+        "f": ["TypeError"]
     }
 }
