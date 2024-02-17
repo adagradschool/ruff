@@ -4,5 +4,5 @@ def might_throw():
 def catch_exception():
     try:
         might_throw()
-    except IndexError as e:
+    except IndexError:
         print("Caught an IndexError.")

@@ -18,7 +18,7 @@ use ruff_linter::settings::types::SerializationFormat;
 use ruff_linter::{fs, warn_user, warn_user_once};
 use ruff_workspace::Settings;
 
-use crate::args::{Args, CheckCommand, Command, FormatCommand, HelpFormat};
+use crate::args::{Args, CheckCommand, Command, FormatCommand, HelpFormat, RaiseCommand};
 use crate::printer::{Flags as PrinterFlags, Printer};
 
 pub mod args;
@@ -200,9 +200,15 @@ pub fn run(
         }
         Command::Check(args) => check(args, log_level),
         Command::Format(args) => format(args, log_level),
+        Command::Raise(args) => raise(args, log_level),
     }
 }
 
+
+fn raise(args: RaiseCommand, log_level: LogLevel) -> Result<ExitStatus> {
+    let (cli, overrides) = args.partition();
+    commands::raise::raise(cli, &overrides, log_level)
+}
 fn format(args: FormatCommand, log_level: LogLevel) -> Result<ExitStatus> {
     let (cli, overrides) = args.partition();
 

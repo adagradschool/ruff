@@ -29,3 +29,4 @@ mod statement;
 mod string_like;
 mod suite;
 mod unresolved_references;
+pub(crate) mod playground;

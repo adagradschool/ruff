@@ -1923,14 +1923,15 @@ impl<'a> Checker<'a> {
                 self.semantic.restore(snapshot);
 
                 let Stmt::FunctionDef(ast::StmtFunctionDef {
+                    name,
                     body, parameters, ..
                 }) = self.semantic.current_statement()
                 else {
                     unreachable!("Expected Stmt::FunctionDef")
                 };
-
                 self.visit_parameters(parameters);
                 self.visit_body(body);
+                // analyze::playground::analyze_fun(body, &name);
             }
         }
         self.semantic.restore(snapshot);

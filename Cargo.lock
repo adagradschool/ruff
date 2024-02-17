@@ -2370,6 +2370,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "ruff_python_raiser"
+version = "0.1.0"
+dependencies = [
+ "ruff_python_ast",
+ "ruff_python_parser",
+]
+
+[[package]]
 name = "ruff_python_resolver"
 version = "0.0.0"
 dependencies = [

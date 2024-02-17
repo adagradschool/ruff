@@ -102,17 +102,17 @@ fn show_possible_raises(map: &HashMap<String, FunctionDiagnostic>) {
 
 
 fn main() {
-    let builtins = exceptions::get_builtins();
-    let runtime_error = builtins.get("RuntimeError").unwrap();
-    let exception = builtins.get("Exception").unwrap();
-    println!("{:?}", exception.is_superclass_of(runtime_error));
+    // let builtins = exceptions::get_builtins();
+    // let runtime_error = builtins.get("RuntimeError").unwrap();
+    // let exception = builtins.get("Exception").unwrap();
+    // println!("{:?}", exception.is_superclass_of(runtime_error));
 
-    // let mut store: HashMap<String, FunctionDiagnostic> = HashMap::new();
-    // let path = std::env::args().nth(1).expect("Missing path");
-    // let source = std::fs::read_to_string(path).expect("Failed to read file");
-    // let program = parser::parse_program(source.as_str()).expect("Failed to parse program");
-    // // analyze(&program.body);
-    // populate_function_diagnostics(&program.body, &mut store);
-    // // println!("{:?}", store);
-    // show_possible_raises(&store);
+    let mut store: HashMap<String, FunctionDiagnostic> = HashMap::new();
+    let path = std::env::args().nth(1).expect("Missing path");
+    let source = std::fs::read_to_string(path).expect("Failed to read file");
+    let program = parser::parse_program(source.as_str()).expect("Failed to parse program");
+    // analyze(&program.body);
+    populate_function_diagnostics(&program.body, &mut store);
+    // println!("{:?}", store);
+    show_possible_raises(&store);
 }

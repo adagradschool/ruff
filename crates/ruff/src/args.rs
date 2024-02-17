@@ -87,6 +87,8 @@ pub enum Command {
         #[arg(long, value_enum, default_value = "text")]
         output_format: HelpFormat,
     },
+    /// Raisin
+    Raise(RaiseCommand),
 }
 
 // The `Parser` derive is for ruff_dev, for ruff `Args` would be sufficient
@@ -463,6 +465,51 @@ pub struct FormatCommand {
     pub range: Option<FormatRange>,
 }
 
+
+#[derive(Clone, Debug, clap::Parser)]
+#[allow(clippy::struct_excessive_bools)]
+pub struct RaiseCommand {
+    /// List of files or directories to format.
+    #[clap(help = "List of files or directories to format [default: .]")]
+    pub files: Vec<PathBuf>,
+
+    /// Disable cache reads.
+    #[arg(short, long, env = "RUFF_NO_CACHE", help_heading = "Miscellaneous")]
+    pub no_cache: bool,
+    /// Path to the cache directory.
+    #[arg(long, env = "RUFF_CACHE_DIR", help_heading = "Miscellaneous")]
+    pub cache_dir: Option<PathBuf>,
+
+    /// List of paths, used to omit files and/or directories from analysis.
+    #[arg(
+        long,
+        value_delimiter = ',',
+        value_name = "FILE_PATTERN",
+        help_heading = "File selection"
+    )]
+    pub exclude: Option<Vec<FilePattern>>,
+
+    /// Enforce exclusions, even for paths passed to Ruff directly on the command-line.
+    /// Use `--no-force-exclude` to disable.
+    #[arg(
+        long,
+        overrides_with("no_force_exclude"),
+        help_heading = "File selection"
+    )]
+    force_exclude: bool,
+    #[clap(long, overrides_with("force_exclude"), hide = true)]
+    no_force_exclude: bool,
+
+    /// List of mappings from file extension to language (one of ["python", "ipynb", "pyi"]). For
+    /// example, to treat `.ipy` files as IPython notebooks, use `--extension ipy:ipynb`.
+    #[arg(long, value_delimiter = ',')]
+    pub extension: Option<Vec<ExtensionPair>>,
+    /// The minimum Python version that should be supported.
+    #[arg(long, value_enum)]
+    pub target_version: Option<PythonVersion>,
+}
+
+
 #[derive(Debug, Clone, Copy, clap::ValueEnum)]
 pub enum HelpFormat {
     Text,
@@ -613,6 +660,32 @@ impl FormatCommand {
     }
 }
 
+impl RaiseCommand {
+    /// Partition the CLI into command-line arguments and configuration
+    /// overrides.
+    pub fn partition(self) -> (RaiseArguments, CliOverrides) {
+        (
+            RaiseArguments {
+                files: self.files,
+                no_cache: self.no_cache,
+            },
+            CliOverrides {
+                line_length: None,
+                respect_gitignore: None,
+                exclude: self.exclude,
+                preview: None,
+                force_exclude: None,
+                target_version: self.target_version,
+                cache_dir: self.cache_dir,
+                extension: self.extension,
+
+                // Unsupported on the formatter CLI, but required on `Overrides`.
+                ..CliOverrides::default()
+            },
+        )
+    }
+}
+
 fn resolve_bool_arg(yes: bool, no: bool) -> Option<bool> {
     match (yes, no) {
         (true, false) => Some(true),
@@ -693,6 +766,14 @@ pub struct FormatArguments {
     pub isolated: bool,
     pub stdin_filename: Option<PathBuf>,
     pub range: Option<FormatRange>,
+}
+
+/// CLI settings that are distinct from configuration (commands, lists of files,
+/// etc.).
+#[allow(clippy::struct_excessive_bools)]
+pub struct RaiseArguments {
+    pub no_cache: bool,
+    pub files: Vec<PathBuf>,
 }
 
 /// A text range specified by line and column numbers.

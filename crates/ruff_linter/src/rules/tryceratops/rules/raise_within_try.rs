@@ -88,7 +88,7 @@ pub(crate) fn raise_within_try(checker: &mut Checker, body: &[Stmt], handlers: &
         visitor.visit_body(body);
         visitor.raises
     };
-
+    // println!("{:?}", raises);
     if raises.is_empty() {
         return;
     }
