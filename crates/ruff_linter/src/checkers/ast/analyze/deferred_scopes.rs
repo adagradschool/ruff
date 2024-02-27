@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use ruff_diagnostics::{Diagnostic, Fix};
 use ruff_python_semantic::analyze::visibility;
 use ruff_python_semantic::{Binding, BindingKind, Imported, ScopeKind};
@@ -78,9 +80,18 @@ pub(crate) fn deferred_scopes(checker: &mut Checker) {
     };
 
     let mut diagnostics: Vec<Diagnostic> = vec![];
+    // let mut function_analyses = HashMap::new();
     for scope_id in checker.analyze.scopes.iter().rev().copied() {
         let scope = &checker.semantic.scopes[scope_id];
 
+        if scope.kind.is_function() {
+            let function = scope.kind.as_function().unwrap();
+            println!("Function: {}", function.name);
+            let fun_result = super::playground::analyze_fun(&function.body);
+            // function_analyses.insert(function.name.to_string(), &fun_result);
+            println!("{:#?}", fun_result);
+        }
+        
         if checker.enabled(Rule::UndefinedLocal) {
             pyflakes::rules::undefined_local(checker, scope_id, scope, &mut diagnostics);
         }
@@ -387,5 +398,6 @@ pub(crate) fn deferred_scopes(checker: &mut Checker) {
             }
         }
     }
+    
     checker.diagnostics.extend(diagnostics);
 }

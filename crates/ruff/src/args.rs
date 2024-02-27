@@ -87,8 +87,6 @@ pub enum Command {
         #[arg(long, value_enum, default_value = "text")]
         output_format: HelpFormat,
     },
-    /// Raisin
-    Raise(RaiseCommand),
 }
 
 // The `Parser` derive is for ruff_dev, for ruff `Args` would be sufficient
